@@ -1,0 +1,30 @@
+#navigator-back-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    padding: 3rem 4rem 4rem 9rem;
+}
+
+#navigator-back-container.absolute {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+}
+
+.navigator-back-button {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 5rem !important;
+    padding: 2rem !important;
+    z-index: 1;
+}
+
+.navigator-back-button:active {
+    margin-left: -0.3rem;
+}
+
+#navigator-back-title {
+    margin: 0;
+}
