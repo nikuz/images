@@ -2,10 +2,10 @@
 
 import type { DispatchAPI } from 'redux';
 import {
-    commonUtils,
     actionCreator,
     request,
 } from '../utils';
+import { routerSelectors } from '../selectors';
 import { languageConstants } from '../constants';
 
 const {
@@ -15,7 +15,7 @@ const {
 } = languageConstants;
 
 export function getTranslations() {
-    const apiUrl = commonUtils.getApiUrl();
+    const apiUrl = routerSelectors.getApiUrl();
     return (dispatch: DispatchAPI<*>) => actionCreator({
         dispatch,
         requestAction: GET_TRANSLATIONS_REQUEST,

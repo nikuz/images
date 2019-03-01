@@ -1,7 +1,10 @@
 // @flow
 
 import { createSelector } from 'reselect';
-import { routerConstants } from '../constants';
+import {
+    appConstants,
+    routerConstants,
+} from '../constants';
 import type { StoreState } from '../reducers';
 
 const getLocationPath = createSelector(
@@ -12,6 +15,11 @@ const getLocationPath = createSelector(
 // ----------------
 // public methods
 // ----------------
+
+export const getApiUrl = () => {
+    const loc = window.location;
+    return `${loc.protocol}//${loc.hostname}:${appConstants.apiPort}`;
+};
 
 export const isOnOrders: (StoreState) => boolean = createSelector(
     getLocationPath,

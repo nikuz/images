@@ -2,10 +2,10 @@
 
 import type { DispatchAPI } from 'redux';
 import {
-    commonUtils,
     actionCreator,
     request,
 } from '../utils';
+import { routerSelectors } from '../selectors';
 import { profileConstants } from '../constants';
 
 const {
@@ -23,7 +23,7 @@ const {
 } = profileConstants;
 
 export function login(identifier: string, password: string) {
-    const apiUrl = commonUtils.getApiUrl();
+    const apiUrl = routerSelectors.getApiUrl();
     return (dispatch: DispatchAPI<*>) => actionCreator({
         dispatch,
         requestAction: PROFILE_LOGIN_REQUEST,
@@ -41,7 +41,7 @@ export function login(identifier: string, password: string) {
 }
 
 export function registration(username: string, email: string, password: string) {
-    const apiUrl = commonUtils.getApiUrl();
+    const apiUrl = routerSelectors.getApiUrl();
     return (dispatch: DispatchAPI<*>) => actionCreator({
         dispatch,
         requestAction: PROFILE_REGISTRATION_REQUEST,
@@ -60,7 +60,7 @@ export function registration(username: string, email: string, password: string) 
 }
 
 export function getUser(token: string) {
-    const apiUrl = commonUtils.getApiUrl();
+    const apiUrl = routerSelectors.getApiUrl();
     return (dispatch: DispatchAPI<*>) => actionCreator({
         dispatch,
         requestAction: PROFILE_GET_USER_REQUEST,

@@ -18,17 +18,21 @@ export default class Home extends React.Component<Props> { // eslint-disable-lin
         const { user } = this.props;
         return (
             <div>
-                <div>
-                    <Link to={routerConstants.LOGIN}>
-                        <FormattedMessage id="Home.Login" />
-                    </Link>
-                </div>
-                <div className="inline-block">
-                    <ButtonBlue
-                        text="Home.Logout"
-                        onClick={this.props.logOut}
-                    />
-                </div>
+                { !user && (
+                    <div>
+                        <Link to={routerConstants.LOGIN}>
+                            <FormattedMessage id="Home.Login" />
+                        </Link>
+                    </div>
+                ) }
+                { user && (
+                    <div className="inline-block">
+                        <ButtonBlue
+                            text="Home.Logout"
+                            onClick={this.props.logOut}
+                        />
+                    </div>
+                ) }
                 { user && (
                     <div>
                         <Link to={routerConstants.ORDERS}>

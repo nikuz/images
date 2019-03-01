@@ -6,14 +6,15 @@ import {
     languageActions,
     profileActions,
 } from '../../actions';
+import { profileSelectors } from '../../selectors';
 import type { StoreState } from '../../reducers';
 import View from './view';
 
 const mapStateToProps = (state: StoreState) => ({
     languageDictionaries: state.language.dictionaries,
     curLanguage: state.language.current,
-    profileToken: state.profile.token,
-    user: state.profile.user,
+    profileToken: profileSelectors.getToken(state),
+    user: profileSelectors.getUser(state),
     profileGetUserLoading: state.profile.getUserLoading,
     profileGetUserError: state.profile.getUserError,
 });

@@ -37,7 +37,6 @@ export default function languageReducer(
             return {
                 ...state,
                 dictionaries: payload,
-                error: undefined,
             };
 
         case GET_TRANSLATIONS_FAILURE:

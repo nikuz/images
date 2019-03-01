@@ -3,10 +3,11 @@
 import { connect } from 'react-redux';
 import type { StoreState } from '../../reducers';
 import { profileActions } from '../../actions';
+import { profileSelectors } from '../../selectors';
 import View from './view';
 
 const mapStateToProps = (state: StoreState) => ({
-    user: state.profile.user,
+    user: profileSelectors.getUser(state),
 });
 
 const mapDispatchToProps = ({
