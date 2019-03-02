@@ -2,9 +2,9 @@
 
 import * as React from 'react';
 import { FormattedMessage } from 'react-intl';
-import RadioButtonItem from './view-item';
+import Select from 'react-select';
 import type {
-    FormRadioFieldItem,
+    FormSelectorFieldItem,
     FormFieldValue,
 } from '../../types';
 import type { FormReducerState } from '../../reducers/form';
@@ -13,9 +13,9 @@ import './style.css';
 type Props = {
     form: FormReducerState,
     value?: FormFieldValue,
-    items: FormRadioFieldItem[],
+    items: FormSelectorFieldItem[],
     className?: string | { [className: string]: * },
-    itemClassName?: string | { [className: string]: * },
+    itemClassName?: string,
     id: string,
     label?: string,
     required?: boolean,
@@ -24,7 +24,7 @@ type Props = {
     clear: (field: string) => *,
 };
 
-export default class RadioButtons extends React.Component<Props, void> {
+export default class SelectField extends React.Component<Props, void> {
     shouldComponentUpdate = (nextProps: Props) => (
         nextProps.value !== this.props.value
         || nextProps.items !== this.props.items
@@ -35,18 +35,18 @@ export default class RadioButtons extends React.Component<Props, void> {
         this.props.clear(this.props.id);
     }
 
-    onChangeHandler = (value: FormFieldValue) => {
+    onChangeHandler = (data: Object) => {
         const {
             id,
             valueChange,
             onChange,
         } = this.props;
 
-        valueChange(id, value);
+        valueChange(id, data.value);
         if (onChange && onChange instanceof Function) {
             onChange({
                 id,
-                value,
+                value: data.data,
             });
         }
     };
@@ -61,6 +61,8 @@ export default class RadioButtons extends React.Component<Props, void> {
             required,
         } = this.props;
 
+        const selectedItem = items.find(item => item.value === value);
+
         return (
             <div className={className}>
                 { label && (
@@ -71,17 +73,13 @@ export default class RadioButtons extends React.Component<Props, void> {
                         ) }
                     </div>
                 ) }
-                <div className="radio-buttons">
-                    {items.map(item => (
-                        <RadioButtonItem
-                            key={item.value.toString()}
-                            id={item.id}
-                            value={item.value}
-                            selected={item.id === value}
-                            className={itemClassName}
-                            onChange={this.onChangeHandler}
-                        />
-                    ))}
+                <div className="select-field-container">
+                    <Select
+                        value={selectedItem || null}
+                        onChange={this.onChangeHandler}
+                        options={items}
+                        classNamePrefix={itemClassName}
+                    />
                 </div>
             </div>
         );

@@ -35,10 +35,14 @@ export type FormFieldArrayBoolean = FormField & {
     value: boolean[],
 };
 
-export type FormSelectorFieldItem = {
+export type FormRadioFieldItem = {
     id: string,
     value: FormFieldValue,
-    selected: ?boolean,
+};
+
+export type FormSelectorFieldItem = {
+    value: string,
+    label: FormFieldValue,
 };
 
 export type FormFieldChangeData = {

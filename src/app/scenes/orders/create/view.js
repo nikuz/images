@@ -7,6 +7,7 @@ import * as React from 'react';
 import {
     Loading,
     RadioButtons,
+    SelectField,
     // ButtonBlue,
 } from '../../../components';
 import type {
@@ -20,8 +21,10 @@ type Props = {
     genres: Genre[],
     genresLoading: boolean,
     genresError: ErrorObject,
-    genreField: FormFieldString,
+    genrePopularField: FormFieldString,
+    genreOtherField: FormFieldString,
     getGenres: () => *,
+    formFieldClear: (field: string) => *,
 };
 
 export default class OrdersCreate extends React.Component<Props> {
@@ -31,13 +34,25 @@ export default class OrdersCreate extends React.Component<Props> {
         }
     }
 
+    handlePopularGenreSelect = () => {
+        this.props.formFieldClear(this.props.genreOtherField.id);
+    };
+
+    handleOtherGenreSelect = () => {
+        this.props.formFieldClear(this.props.genrePopularField.id);
+    };
+
     render() {
         const {
             genres,
             genresLoading,
             genresError,
-            genreField,
+            genrePopularField,
+            genreOtherField,
         } = this.props;
+
+        const popularGenres = genres.slice(0, 3);
+        const otherGenres = genres.slice(3);
 
         return (
             <div>
@@ -49,15 +64,29 @@ export default class OrdersCreate extends React.Component<Props> {
                     </div>
                 ) }
                 { !!genres.length && (
-                    <RadioButtons
-                        id={genreField.id}
-                        value={genreField.value || genres[0].id}
-                        items={genres.map(item => ({
-                            id: item.id,
-                            value: item.name,
-                        }))}
-                        label="Orders.Theme"
-                    />
+                    <div className="order-genres-container">
+                        <RadioButtons
+                            id={genrePopularField.id}
+                            value={genrePopularField.value}
+                            items={popularGenres.map(item => ({
+                                id: item.id,
+                                value: item.name,
+                            }))}
+                            label="Orders.Popular-Themes"
+                            onChange={this.handlePopularGenreSelect}
+                        />
+                        <SelectField
+                            id={genreOtherField.id}
+                            value={genreOtherField.value}
+                            className="order-genres-others-selector"
+                            items={otherGenres.map(item => ({
+                                value: item.id,
+                                label: item.name,
+                            }))}
+                            label="Orders.Other-Themes"
+                            onChange={this.handleOtherGenreSelect}
+                        />
+                    </div>
                 ) }
             </div>
         );

@@ -14,7 +14,7 @@ type Props = {
     onChange: (value: FormFieldValue) => *,
 };
 
-class RadioButtonItem extends React.PureComponent<Props, void> {
+export default class RadioButtonItem extends React.PureComponent<Props, void> {
     onChangeHandler = () => {
         this.props.onChange(this.props.id);
     };
@@ -46,5 +46,3 @@ class RadioButtonItem extends React.PureComponent<Props, void> {
         );
     }
 }
-
-export default RadioButtonItem;

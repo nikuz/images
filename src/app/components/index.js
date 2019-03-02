@@ -19,6 +19,7 @@ import Overlay, {
 import Loading from './loading';
 import BackButton from './back-button';
 import RadioButtons from './radio-buttons';
+import SelectField from './select-field';
 
 export {
     Button,
@@ -38,4 +39,5 @@ export {
     Loading,
     BackButton,
     RadioButtons,
+    SelectField,
 };

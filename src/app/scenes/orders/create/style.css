@@ -1,0 +1,10 @@
+.order-genres-container {
+    display: flex;
+    align-items: flex-end;
+    padding: 0 2rem;
+}
+
+.order-genres-others-selector {
+    flex: 1;
+    margin-left: 2rem;
+}
