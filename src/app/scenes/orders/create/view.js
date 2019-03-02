@@ -6,11 +6,13 @@ import * as React from 'react';
 // import { routerConstants } from '../../../constants';
 import {
     Loading,
+    RadioButtons,
     // ButtonBlue,
 } from '../../../components';
 import type {
     ErrorObject,
     Genre,
+    FormFieldString,
 } from '../../../types';
 import './style.css';
 
@@ -18,6 +20,7 @@ type Props = {
     genres: Genre[],
     genresLoading: boolean,
     genresError: ErrorObject,
+    genreField: FormFieldString,
     getGenres: () => *,
 };
 
@@ -30,8 +33,10 @@ export default class OrdersCreate extends React.Component<Props> {
 
     render() {
         const {
+            genres,
             genresLoading,
             genresError,
+            genreField,
         } = this.props;
 
         return (
@@ -42,6 +47,17 @@ export default class OrdersCreate extends React.Component<Props> {
                     <div>
                         { genresError.message }
                     </div>
+                ) }
+                { !!genres.length && (
+                    <RadioButtons
+                        id={genreField.id}
+                        value={genreField.value || genres[0].id}
+                        items={genres.map(item => ({
+                            id: item.id,
+                            value: item.name,
+                        }))}
+                        label="Orders.Theme"
+                    />
                 ) }
             </div>
         );

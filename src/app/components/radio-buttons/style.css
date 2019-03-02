@@ -1,0 +1,15 @@
+
+.radio-buttons-label {
+    margin-bottom: 1.2rem;
+    color: var(--text-color-dark);
+}
+
+.radio-buttons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.radio-button {
+    justify-content: center;
+}

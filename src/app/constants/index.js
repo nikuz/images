@@ -5,6 +5,7 @@ import * as routerConstants from './router';
 import languageConstants from './language';
 import profileConstants from './profile';
 import orderConstants from './order';
+import formConstants from './form';
 
 export {
     appConstants,
@@ -12,4 +13,5 @@ export {
     languageConstants,
     profileConstants,
     orderConstants,
+    formConstants,
 };
