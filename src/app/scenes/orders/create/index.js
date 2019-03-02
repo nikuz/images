@@ -22,6 +22,8 @@ const mapStateToProps = (state: StoreState) => ({
     genresError: state.order.genresError,
     genrePopularField: formSelectors.getFieldString(state, 'genre-popular'),
     genreOtherField: formSelectors.getFieldString(state, 'genre-others'),
+    formatField: formSelectors.getFieldString(state, 'format'),
+    sizeField: formSelectors.getFieldString(state, 'size'),
 });
 
 const mapDispatchToProps = ({

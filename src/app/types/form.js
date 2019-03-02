@@ -38,6 +38,7 @@ export type FormFieldArrayBoolean = FormField & {
 export type FormRadioFieldItem = {
     id: string,
     value: FormFieldValue,
+    description?: string,
 };
 
 export type FormSelectorFieldItem = {

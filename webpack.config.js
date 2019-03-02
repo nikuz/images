@@ -145,5 +145,8 @@ const options = {
         historyApiFallback: true,
     },
     optimization,
+    performance: {
+        hints: false,
+    },
 };
 module.exports = options;

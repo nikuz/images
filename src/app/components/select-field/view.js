@@ -12,6 +12,7 @@ import './style.css';
 
 type Props = {
     form: FormReducerState,
+    intl: Object,
     value?: FormFieldValue,
     items: FormSelectorFieldItem[],
     className?: string | { [className: string]: * },
@@ -24,12 +25,29 @@ type Props = {
     clear: (field: string) => *,
 };
 
-export default class SelectField extends React.Component<Props, void> {
+type State = {
+    items: FormSelectorFieldItem[],
+};
+
+export default class SelectField extends React.Component<Props, State> {
+    state = {
+        items: [],
+    };
+
     shouldComponentUpdate = (nextProps: Props) => (
         nextProps.value !== this.props.value
         || nextProps.items !== this.props.items
         || nextProps.form[nextProps.id] !== this.props.form[this.props.id]
     );
+
+    componentWillMount(): void {
+        this.setState({
+            items: this.props.items.map(item => ({
+                value: item.value,
+                label: this.props.intl.formatMessage({ id: item.label }),
+            })),
+        });
+    }
 
     componentWillUnmount() {
         this.props.clear(this.props.id);
@@ -53,13 +71,13 @@ export default class SelectField extends React.Component<Props, void> {
 
     render() {
         const {
-            items,
             value,
             className,
             itemClassName,
             label,
             required,
         } = this.props;
+        const { items } = this.state;
 
         const selectedItem = items.find(item => item.value === value);
 

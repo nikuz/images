@@ -2,33 +2,40 @@
 
 import * as React from 'react';
 import classNames from 'classnames';
-import Button, { ButtonOrange } from '../button';
+import { FormattedMessage } from 'react-intl';
 import type { FormFieldValue } from '../../types';
 import './style.css';
 
 type Props = {
+    group: string,
     id: string,
     value: FormFieldValue,
+    description?: string,
     selected: ?boolean,
+    translate?: boolean,
     className?: string | { [className: string]: * },
     onChange: (value: FormFieldValue) => *,
 };
 
 export default class RadioButtonItem extends React.PureComponent<Props, void> {
+    static defaultProps = {
+        translate: true,
+    };
+
     onChangeHandler = () => {
         this.props.onChange(this.props.id);
     };
 
     render() {
         const {
+            group,
+            id,
             selected,
             value,
+            description,
+            translate,
         } = this.props;
         let { className } = this.props;
-        let ButtonComponent = Button;
-        if (selected) {
-            ButtonComponent = ButtonOrange;
-        }
 
         className = classNames(
             'radio-button',
@@ -37,12 +44,31 @@ export default class RadioButtonItem extends React.PureComponent<Props, void> {
         );
 
         return (
-            <ButtonComponent
+            <label
                 className={className}
+                htmlFor={`${group}-${id}`}
                 onClick={this.onChangeHandler}
             >
-                { value }
-            </ButtonComponent>
+                <input
+                    type="radio"
+                    name={group}
+                    id={`${group}-${id}`}
+                    value={id}
+                    onChange={this.onChangeHandler}
+                />
+                { translate && typeof value === 'string'
+                    ? <FormattedMessage id={value} />
+                    : value
+                }
+                { description && (
+                    <span className="radio-button-description">
+                        { translate
+                            ? <FormattedMessage id={description} />
+                            : description
+                        }
+                    </span>
+                ) }
+            </label>
         );
     }
 }

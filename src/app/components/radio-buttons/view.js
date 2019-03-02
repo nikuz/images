@@ -19,6 +19,7 @@ type Props = {
     id: string,
     label?: string,
     required?: boolean,
+    translate?: boolean,
     onChange?: (data: Object) => *,
     valueChange: (field: string, value: FormFieldValue) => *,
     clear: (field: string) => *,
@@ -53,12 +54,14 @@ export default class RadioButtons extends React.Component<Props, void> {
 
     render() {
         const {
+            id,
             items,
             value,
             className,
             itemClassName,
             label,
             required,
+            translate,
         } = this.props;
 
         return (
@@ -75,8 +78,11 @@ export default class RadioButtons extends React.Component<Props, void> {
                     {items.map(item => (
                         <RadioButtonItem
                             key={item.value.toString()}
+                            group={id}
                             id={item.id}
                             value={item.value}
+                            description={item.description}
+                            translate={translate}
                             selected={item.id === value}
                             className={itemClassName}
                             onChange={this.onChangeHandler}
