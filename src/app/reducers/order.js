@@ -7,18 +7,27 @@ const {
     ORDER_GENRES_REQUEST,
     ORDER_GENRES_SUCCESS,
     ORDER_GENRES_FAILURE,
+    ORDER_EXAMPLE_REQUEST,
+    ORDER_EXAMPLE_SUCCESS,
+    ORDER_EXAMPLE_FAILURE,
 } = orderConstants;
 
 export type OrderReducerState = {
     genres: Genre[],
     genresLoading: boolean,
     genresError: ?Error,
+    example?: string,
+    exampleLoading: boolean,
+    exampleError: ?Error,
 };
 
 const initialState = {
     genres: [],
     genresLoading: false,
     genresError: undefined,
+    example: undefined,
+    exampleLoading: false,
+    exampleError: undefined,
 };
 
 export default function languageReducer(
@@ -46,6 +55,27 @@ export default function languageReducer(
                 ...state,
                 genresLoading: false,
                 genresError: payload,
+            };
+
+        case ORDER_EXAMPLE_REQUEST:
+            return {
+                ...state,
+                exampleLoading: true,
+            };
+
+        case ORDER_EXAMPLE_SUCCESS:
+            return {
+                ...state,
+                exampleLoading: false,
+                exampleError: undefined,
+                example: payload,
+            };
+
+        case ORDER_EXAMPLE_FAILURE:
+            return {
+                ...state,
+                exampleLoading: false,
+                exampleError: payload,
             };
 
         default:

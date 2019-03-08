@@ -20,6 +20,7 @@ import Loading from './loading';
 import BackButton from './back-button';
 import RadioButtons from './radio-buttons';
 import SelectField from './select-field';
+import TextField from './text-field';
 
 export {
     Button,
@@ -40,4 +41,5 @@ export {
     BackButton,
     RadioButtons,
     SelectField,
+    TextField,
 };

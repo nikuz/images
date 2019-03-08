@@ -24,11 +24,18 @@ const mapStateToProps = (state: StoreState) => ({
     genreOtherField: formSelectors.getFieldString(state, 'genre-others'),
     formatField: formSelectors.getFieldString(state, 'format'),
     sizeField: formSelectors.getFieldString(state, 'size'),
+    logoPositionField: formSelectors.getFieldString(state, 'logo-position', 'left'),
+    copyrightPositionField: formSelectors.getFieldString(state, 'copyright-position', 'left'),
+    copyrightField: formSelectors.getFieldString(state, 'copyright'),
+    example: state.order.example,
+    exampleLoading: state.order.exampleLoading,
+    exampleError: state.order.exampleError,
 });
 
 const mapDispatchToProps = ({
     getGenres: orderActions.getGenres,
     formFieldClear: formActions.fieldClear,
+    getExample: orderActions.getExample,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);

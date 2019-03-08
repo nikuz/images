@@ -20,13 +20,13 @@ type RequestProps = {
 
 function tryResolve(
     responseText: string,
-    resolve: * => void,
-    reject: ErrorObject => void
+    resolve: * => void
 ): void {
     try {
-        resolve(JSON.parse(responseText));
+        const jsonResult = JSON.parse(responseText);
+        resolve(jsonResult);
     } catch (e) {
-        reject(makeError('parse_error', String(e)));
+        resolve(responseText);
     }
 }
 
@@ -82,7 +82,7 @@ function makeRequest<T>( // eslint-disable-line
                 resolve(readOnlyArray);
                 break;
             case 200:
-                tryResolve(target.responseText, resolve, reject);
+                tryResolve(target.responseText, resolve);
                 break;
             case 201:
                 makeRequest(

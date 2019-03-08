@@ -1,37 +1,31 @@
 // @flow
 
 import * as React from 'react';
-import { FormattedMessage } from 'react-intl';
 import {
     BackButton,
     ButtonGreen,
     Loading,
+    TextField,
 } from '../../components';
-import type { ErrorObject } from '../../types';
+import type {
+    ErrorObject,
+    FormFieldString,
+} from '../../types';
 import './style.css';
 
 type Props = {
     loading: boolean,
     error?: ErrorObject,
     token?: string,
+    nameField: FormFieldString,
+    emailField: FormFieldString,
+    passwordField: FormFieldString,
     registration: (name: string, email: string, password: string) => *,
     setToken: (token: string) => *,
     goToHomePage: () => *,
 };
 
-type State = {
-    name: string,
-    email: string,
-    password: string,
-};
-
-export default class Registration extends React.Component<Props, State> {
-    state = {
-        name: '',
-        email: '',
-        password: '',
-    };
-
+export default class Registration extends React.Component<Props> {
     componentWillReceiveProps(nextProps: Props): void {
         if (nextProps.token && !this.props.token) {
             this.props.setToken(nextProps.token);
@@ -39,38 +33,27 @@ export default class Registration extends React.Component<Props, State> {
         }
     }
 
-    handleNameChange = ({ target }: { target: HTMLInputElement }) => {
-        this.setState({
-            name: target.value,
-        });
-    };
-
-    handleEmailChange = ({ target }: { target: HTMLInputElement }) => {
-        this.setState({
-            email: target.value,
-        });
-    };
-
-    handlePasswordChange = ({ target }: { target: HTMLInputElement }) => {
-        this.setState({
-            password: target.value,
-        });
-    };
-
     handleRegistration = () => {
         const {
-            name,
-            email,
-            password,
-        } = this.state;
+            nameField,
+            emailField,
+            passwordField,
+        } = this.props;
 
-        this.props.registration(name, email, password);
+        this.props.registration(
+            nameField.value,
+            emailField.value,
+            passwordField.value
+        );
     };
 
     render() {
         const {
             loading,
             error,
+            nameField,
+            emailField,
+            passwordField,
         } = this.props;
 
         return (
@@ -79,37 +62,35 @@ export default class Registration extends React.Component<Props, State> {
                     text="Registration.Back"
                 />
                 <div>
-                    <label htmlFor="name">
-                        <FormattedMessage id="Registration.Name" />
-                        <input
-                            type="text"
-                            id="name"
-                            value={this.state.name}
-                            onChange={this.handleNameChange}
-                        />
-                    </label>
+                    <TextField
+                        id={nameField.id}
+                        value={nameField.value}
+                        label="Registration.Name"
+                        required
+                        className=""
+                    />
                 </div>
                 <div>
-                    <label htmlFor="email">
-                        <FormattedMessage id="Registration.Email" />
-                        <input
-                            type="email"
-                            id="email"
-                            value={this.state.email}
-                            onChange={this.handleEmailChange}
-                        />
-                    </label>
+                    <TextField
+                        type="email"
+                        id={emailField.id}
+                        value={emailField.value}
+                        label="Registration.Email"
+                        required
+                        className=""
+                    />
                 </div>
                 <div>
-                    <label htmlFor="password">
-                        <FormattedMessage id="Registration.Password" />
-                        <input
-                            type="password"
-                            id="password"
-                            value={this.state.password}
-                            onChange={this.handlePasswordChange}
-                        />
-                    </label>
+                    <TextField
+                        type="password"
+                        passwordVisible={passwordField.passwordVisible}
+                        id={passwordField.id}
+                        value={passwordField.value}
+                        label="Registration.Password"
+                        required
+                        autoFocus
+                        className=""
+                    />
                 </div>
                 { loading && (
                     <div>

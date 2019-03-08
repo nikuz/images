@@ -7,31 +7,27 @@ import {
     BackButton,
     ButtonBlue,
     Loading,
+    TextField,
 } from '../../components';
 import { routerConstants } from '../../constants';
-import type { ErrorObject } from '../../types';
+import type {
+    ErrorObject,
+    FormFieldString,
+} from '../../types';
 import './style.css';
 
 type Props = {
     loading: boolean,
     error?: ErrorObject,
     token?: string,
+    emailField: FormFieldString,
+    passwordField: FormFieldString,
     login: (email: string, password: string) => *,
     setToken: (token: string) => *,
     goToHomePage: () => *,
 };
 
-type State = {
-    email: string,
-    password: string,
-};
-
-export default class Login extends React.Component<Props, State> {
-    state = {
-        email: '',
-        password: '',
-    };
-
+export default class Login extends React.Component<Props> {
     componentWillReceiveProps(nextProps: Props): void {
         if (nextProps.token && !this.props.token) {
             this.props.setToken(nextProps.token);
@@ -39,31 +35,21 @@ export default class Login extends React.Component<Props, State> {
         }
     }
 
-    handleEmailChange = ({ target }: { target: HTMLInputElement }) => {
-        this.setState({
-            email: target.value,
-        });
-    };
-
-    handlePasswordChange = ({ target }: { target: HTMLInputElement }) => {
-        this.setState({
-            password: target.value,
-        });
-    };
-
     handleLogin = () => {
         const {
-            email,
-            password,
-        } = this.state;
+            emailField,
+            passwordField,
+        } = this.props;
 
-        this.props.login(email, password);
+        this.props.login(emailField.value, passwordField.value);
     };
 
     render() {
         const {
             loading,
             error,
+            emailField,
+            passwordField,
         } = this.props;
 
         return (
@@ -72,26 +58,26 @@ export default class Login extends React.Component<Props, State> {
                     text="Login.Back"
                 />
                 <div>
-                    <label htmlFor="email">
-                        <FormattedMessage id="Login.Email" />
-                        <input
-                            type="text"
-                            id="email"
-                            value={this.state.email}
-                            onChange={this.handleEmailChange}
-                        />
-                    </label>
+                    <TextField
+                        type="email"
+                        id={emailField.id}
+                        value={emailField.value}
+                        label="Login.Email"
+                        required
+                        className=""
+                    />
                 </div>
                 <div>
-                    <label htmlFor="password">
-                        <FormattedMessage id="Login.Password" />
-                        <input
-                            type="password"
-                            id="password"
-                            value={this.state.password}
-                            onChange={this.handlePasswordChange}
-                        />
-                    </label>
+                    <TextField
+                        type="password"
+                        passwordVisible={passwordField.passwordVisible}
+                        id={passwordField.id}
+                        value={passwordField.value}
+                        label="Login.Password"
+                        required
+                        autoFocus
+                        className=""
+                    />
                 </div>
                 { loading && (
                     <div>

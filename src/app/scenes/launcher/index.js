@@ -12,6 +12,7 @@ import View from './view';
 
 const mapStateToProps = (state: StoreState) => ({
     languageDictionaries: state.language.dictionaries,
+    languageError: state.language.error,
     curLanguage: state.language.current,
     profileToken: profileSelectors.getToken(state),
     user: profileSelectors.getUser(state),

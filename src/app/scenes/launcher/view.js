@@ -25,6 +25,7 @@ const locales = {
 type Props = {
     children: React.Node,
     languageDictionaries: Translation[],
+    languageError?: ErrorObject,
     curLanguage: string,
     profileToken?: string,
     profileGetUserLoading: boolean,
@@ -92,6 +93,7 @@ export default class Launcher extends React.PureComponent<Props> {
             languageDictionaries,
             curLanguage,
             profileGetUserLoading,
+            languageError,
         } = this.props;
 
         return (
@@ -101,9 +103,14 @@ export default class Launcher extends React.PureComponent<Props> {
                 messages={this.getDictionary()}
             >
                 <div id="launcher">
+                    { languageError && (
+                        <div>
+                            Api is under maintenance. Please try again later.
+                        </div>
+                    ) }
                     { (!!languageDictionaries.length && !profileGetUserLoading)
                         ? this.props.children
-                        : (
+                        : !languageError && (
                             <div id="launcher-loading">
                                 <Loading size="big" />
                                 <div id="launcher-loading-text">

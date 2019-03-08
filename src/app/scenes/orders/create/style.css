@@ -8,3 +8,43 @@
     flex: 1;
     margin-left: 2rem;
 }
+
+.order-logo-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20rem;
+    height: 20rem;
+    border: 2px dashed #E3E9F3;
+    border-radius: 2em;
+    text-align: center;
+}
+
+.order-logo-wrapper:hover {
+    cursor: pointer;
+}
+
+.order-logo-wrapper.hover {
+    background-color: rgba(28, 93, 231, 0.01);
+    border: 2px dashed rgba(28, 93, 231, 0.10);
+}
+
+.order-logo-wrapper input {
+    display: none;
+}
+
+.order-logo-icon {
+    width: 3rem;
+    height: 3rem;
+}
+/*.textWrapper {*/
+    /*margin-top: 10px;*/
+    /*text-align: center;*/
+    /*font-size: 2em;*/
+    /*color: #9EA7B8;*/
+/*}*/
+
+/*u {*/
+    /*color: #1C5DE7;*/
+/*}*/

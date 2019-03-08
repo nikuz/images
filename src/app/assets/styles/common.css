@@ -43,3 +43,14 @@
 .opacity50 {
     opacity: .5;
 }
+
+.text-field-label {
+    margin-bottom: 1.2rem;
+    font-size: 2.4rem;
+    font-weight: bold;
+    color: var(--text-color-dark);
+}
+
+.field-required-marker {
+    color: #E34848;
+}

@@ -3,12 +3,15 @@
 import * as React from 'react';
 // import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
+import classNames from 'classnames';
 // import { routerConstants } from '../../../constants';
 import {
     Loading,
     RadioButtons,
     SelectField,
-    // ButtonBlue,
+    ButtonBlue,
+    Icon,
+    TextField,
 } from '../../../components';
 import type {
     ErrorObject,
@@ -20,16 +23,33 @@ import './style.css';
 type Props = {
     genres: Genre[],
     genresLoading: boolean,
-    genresError: ErrorObject,
+    genresError?: ErrorObject,
     genrePopularField: FormFieldString,
     genreOtherField: FormFieldString,
     formatField: FormFieldString,
     sizeField: FormFieldString,
+    logoPositionField: FormFieldString,
+    copyrightPositionField: FormFieldString,
+    copyrightField: FormFieldString,
+    example: string,
+    exampleLoading: boolean,
+    exampleError?: ErrorObject,
     getGenres: () => *,
     formFieldClear: (field: string) => *,
+    getExample: (logo?: File, logoAlign: string, copyright?: string, copyrightAlign: string) => *,
 };
 
-export default class OrdersCreate extends React.Component<Props> {
+type State = {
+    isDragging: boolean,
+    logo?: File,
+};
+
+export default class OrdersCreate extends React.Component<Props, State> {
+    state = {
+        isDragging: false,
+        logo: undefined,
+    };
+
     componentWillMount(): void {
         if (!this.props.genres.length) {
             this.props.getGenres();
@@ -42,6 +62,54 @@ export default class OrdersCreate extends React.Component<Props> {
 
     handleOtherGenreSelect = () => {
         this.props.formFieldClear(this.props.genrePopularField.id);
+    };
+
+    logoAdd = (files: FileList) => {
+        const allowedTypes = [
+            'image/jpeg',
+            'image/jpg',
+            'image/png',
+        ];
+        const allowedFiles = [];
+        for (let i = 0, l = files.length; i < l; i++) {
+            const file = files[i];
+            if (allowedTypes.includes(file.type)) {
+                allowedFiles.push(file);
+            }
+        }
+
+        this.setState({
+            isDragging: false,
+            logo: allowedFiles[0],
+        });
+    };
+
+    logoHandleDragEnter = () => this.setState({ isDragging: true });
+
+    logoHandleDragLeave = () => this.setState({ isDragging: false });
+
+    logoHandleDrop = (evt: SyntheticDragEvent<HTMLDivElement>) => {
+        evt.preventDefault();
+        this.logoAdd(evt.dataTransfer.files);
+    };
+
+    logoHandleFileFieldChange = (evt: SyntheticInputEvent<HTMLInputElement>) => {
+        this.logoAdd(evt.target.files);
+    };
+
+    getExample = () => {
+        const {
+            logoPositionField,
+            copyrightField,
+            copyrightPositionField,
+        } = this.props;
+
+        this.props.getExample(
+            this.state.logo,
+            logoPositionField.value,
+            copyrightField.value,
+            copyrightPositionField.value
+        );
     };
 
     formats = [{
@@ -76,6 +144,17 @@ export default class OrdersCreate extends React.Component<Props> {
         description: '1024x512',
     }];
 
+    alignItems = [{
+        id: 'left',
+        value: 'left',
+    }, {
+        id: 'center',
+        value: 'center',
+    }, {
+        id: 'right',
+        value: 'right',
+    }];
+
     render() {
         const {
             genres,
@@ -85,7 +164,17 @@ export default class OrdersCreate extends React.Component<Props> {
             genreOtherField,
             formatField,
             sizeField,
+            logoPositionField,
+            copyrightPositionField,
+            copyrightField,
+            example,
+            exampleLoading,
+            exampleError,
         } = this.props;
+        const {
+            logo,
+            isDragging,
+        } = this.state;
 
         const popularGenres = genres.slice(0, 3);
         const otherGenres = genres.slice(3);
@@ -135,16 +224,85 @@ export default class OrdersCreate extends React.Component<Props> {
                 />
                 <h3>
                     <FormattedMessage id="Orders.Size.Title" />
-                    <p>
-                        <FormattedMessage id="Orders.Size.Description" />
-                    </p>
                 </h3>
+                <p>
+                    <FormattedMessage id="Orders.Size.Description" />
+                </p>
                 <RadioButtons
                     id={sizeField.id}
                     value={sizeField.value}
                     items={this.sizes}
                     translate={false}
                 />
+                <RadioButtons
+                    id={logoPositionField.id}
+                    value={logoPositionField.value}
+                    items={this.alignItems}
+                    label="Orders.Logo"
+                />
+                <label
+                    className={classNames('order-logo-wrapper', isDragging && 'hover')}
+                    onDragEnter={this.logoHandleDragEnter}
+                    onDragOver={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }}
+                    onDrop={this.logoHandleDrop}
+                    htmlFor="logo-field"
+                >
+                    <div>
+                        <div className="">
+                            <Icon
+                                src="image"
+                                className="order-logo-icon"
+                            />
+                        </div>
+                        <p className="">
+                            { logo
+                                ? logo.name
+                                : <FormattedMessage id="Orders.Logo.Text" />
+                            }
+                        </p>
+                        <div
+                            onDragLeave={this.logoHandleDragLeave}
+                            className={classNames(isDragging && 'blocker')}
+                        />
+                        <input
+                            name="logo-field"
+                            id="logo-field"
+                            onChange={this.logoHandleFileFieldChange}
+                            type="file"
+                            accept=".jpg,.jpeg,.png"
+                        />
+                    </div>
+                </label>
+                <RadioButtons
+                    id={copyrightPositionField.id}
+                    value={copyrightPositionField.value}
+                    items={this.alignItems}
+                    label="Orders.Copyright.Alignment"
+                />
+                <TextField
+                    id={copyrightField.id}
+                    value={copyrightField.value}
+                    label="Orders.Copyright"
+                    className=""
+                />
+                <ButtonBlue
+                    text="Orders.Get.Example"
+                    onClick={this.getExample}
+                />
+                <div>
+                    { exampleLoading && <Loading size="small" /> }
+                    { exampleError && (
+                        <div>
+                            { exampleError.message }
+                        </div>
+                    ) }
+                    { !exampleError && example && (
+                        <img src={example} alt="" />
+                    ) }
+                </div>
             </div>
         );
     }
