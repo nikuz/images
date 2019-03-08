@@ -61,6 +61,7 @@ export default function languageReducer(
             return {
                 ...state,
                 exampleLoading: true,
+                exampleError: undefined,
             };
 
         case ORDER_EXAMPLE_SUCCESS:

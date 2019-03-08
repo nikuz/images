@@ -10,6 +10,7 @@ import {
     RadioButtons,
     SelectField,
     ButtonBlue,
+    ButtonTransparent,
     Icon,
     TextField,
 } from '../../../components';
@@ -81,6 +82,12 @@ export default class OrdersCreate extends React.Component<Props, State> {
         this.setState({
             isDragging: false,
             logo: allowedFiles[0],
+        });
+    };
+
+    logoRemove = () => {
+        this.setState({
+            logo: undefined,
         });
     };
 
@@ -178,6 +185,7 @@ export default class OrdersCreate extends React.Component<Props, State> {
 
         const popularGenres = genres.slice(0, 3);
         const otherGenres = genres.slice(3);
+        const exampleVideo = example && example.indexOf('video/mp4') !== -1;
 
         if (genresLoading) {
             return <Loading size="small" />;
@@ -240,6 +248,10 @@ export default class OrdersCreate extends React.Component<Props, State> {
                     items={this.alignItems}
                     label="Orders.Logo"
                 />
+                <ButtonTransparent
+                    leftIcon="close"
+                    onClick={this.logoRemove}
+                />
                 <label
                     className={classNames('order-logo-wrapper', isDragging && 'hover')}
                     onDragEnter={this.logoHandleDragEnter}
@@ -299,8 +311,13 @@ export default class OrdersCreate extends React.Component<Props, State> {
                             { exampleError.message }
                         </div>
                     ) }
-                    { !exampleError && example && (
+                    { !exampleError && example && !exampleVideo && (
                         <img src={example} alt="" />
+                    ) }
+                    { !exampleError && example && exampleVideo && (
+                        <video controls>
+                            <source type="video/mp4" src={example} />
+                        </video>
                     ) }
                 </div>
             </div>
