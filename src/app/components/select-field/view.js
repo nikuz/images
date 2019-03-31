@@ -64,7 +64,7 @@ export default class SelectField extends React.Component<Props, State> {
         if (onChange && onChange instanceof Function) {
             onChange({
                 id,
-                value: data.data,
+                value: data.value,
             });
         }
     };

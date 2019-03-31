@@ -47,7 +47,6 @@ export default class RadioButtonItem extends React.PureComponent<Props, void> {
             <label
                 className={className}
                 htmlFor={`${group}-${id}`}
-                onClick={this.onChangeHandler}
             >
                 <input
                     type="radio"

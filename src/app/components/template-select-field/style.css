@@ -1,0 +1,17 @@
+
+.templates-selector-field-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.tsfc-item {
+    position: relative;
+    margin: 0 2rem 2rem 0;
+    border: 0.4rem solid transparent;
+    font-size: 0;
+    cursor: pointer;
+}
+
+.tsfc-item-selected {
+    border-color: var(--blue-light);
+}

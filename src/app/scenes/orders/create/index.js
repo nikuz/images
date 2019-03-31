@@ -20,13 +20,17 @@ const mapStateToProps = (state: StoreState) => ({
     genres: orderSelectors.getGenres(state),
     genresLoading: state.order.genresLoading,
     genresError: state.order.genresError,
+    templates: orderSelectors.getTemplates(state),
+    templatesLoading: state.order.templatesLoading,
+    templatesError: state.order.templatesError,
     genrePopularField: formSelectors.getFieldString(state, 'genre-popular'),
     genreOtherField: formSelectors.getFieldString(state, 'genre-others'),
-    formatField: formSelectors.getFieldString(state, 'format'),
+    formatField: formSelectors.getFieldString(state, 'format', 'jpeg'),
     sizeField: formSelectors.getFieldString(state, 'size'),
     logoPositionField: formSelectors.getFieldString(state, 'logo-position', 'left'),
     copyrightPositionField: formSelectors.getFieldString(state, 'copyright-position', 'left'),
     copyrightField: formSelectors.getFieldString(state, 'copyright'),
+    templateField: formSelectors.getFieldString(state, 'template'),
     example: state.order.example,
     exampleLoading: state.order.exampleLoading,
     exampleError: state.order.exampleError,
@@ -34,6 +38,7 @@ const mapStateToProps = (state: StoreState) => ({
 
 const mapDispatchToProps = ({
     getGenres: orderActions.getGenres,
+    getTemplates: orderActions.getTemplates,
     formFieldClear: formActions.fieldClear,
     getExample: orderActions.getExample,
 });

@@ -21,6 +21,7 @@ import BackButton from './back-button';
 import RadioButtons from './radio-buttons';
 import SelectField from './select-field';
 import TextField from './text-field';
+import TemplatesSelectField from './template-select-field';
 
 export {
     Button,
@@ -42,4 +43,5 @@ export {
     RadioButtons,
     SelectField,
     TextField,
+    TemplatesSelectField,
 };

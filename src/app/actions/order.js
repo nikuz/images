@@ -15,6 +15,9 @@ const {
     ORDER_GENRES_REQUEST,
     ORDER_GENRES_SUCCESS,
     ORDER_GENRES_FAILURE,
+    ORDER_TEMPLATES_REQUEST,
+    ORDER_TEMPLATES_SUCCESS,
+    ORDER_TEMPLATES_FAILURE,
     ORDER_EXAMPLE_REQUEST,
     ORDER_EXAMPLE_SUCCESS,
     ORDER_EXAMPLE_FAILURE,
@@ -33,6 +36,26 @@ export const getGenres = () => (
         failureAction: ORDER_GENRES_FAILURE,
         action: () => request.get({
             url: `${apiUrl}/genres`,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }),
+    });
+};
+
+export const getTemplates = (genre: string) => (
+    dispatch: DispatchAPI<*>,
+    getState: () => Object
+) => {
+    const token = profileSelectors.getToken(getState()) || '';
+    const apiUrl = routerSelectors.getApiUrl();
+    return actionCreator({
+        dispatch,
+        requestAction: ORDER_TEMPLATES_REQUEST,
+        successAction: ORDER_TEMPLATES_SUCCESS,
+        failureAction: ORDER_TEMPLATES_FAILURE,
+        action: () => request.get({
+            url: `${apiUrl}/templates?genre=${genre}`,
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -60,11 +83,11 @@ export const getExample = (
             url: 'http://localhost:5679',
             args: {
                 imageURL: 'http://localhost:1337/uploads/b20d4e68d36041a595e4962fdc856a6f.jpg',
-                width: 600,
-                height: 600,
-                text: 'To create a user in our API, invoke a PUT request providing JSON data in the request body.',
+                width: 400,
+                height: 400,
+                text: 'To create a user in our API, invoke a PUT request providing JSON data in the request body. djkgkdfg bg dfkgb dfkg dfg',
                 textFontFamily: 'NickAinley',
-                textEffect: 'type',
+                textEffect: 'fade-lines',
                 textAlign: 'right',
                 textVerticalAlign: 'top',
                 author: 'William Longgood',

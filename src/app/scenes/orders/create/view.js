@@ -13,11 +13,14 @@ import {
     ButtonTransparent,
     Icon,
     TextField,
+    TemplatesSelectField,
 } from '../../../components';
 import type {
     ErrorObject,
     Genre,
+    Template,
     FormFieldString,
+    FormFieldChangeData,
 } from '../../../types';
 import './style.css';
 
@@ -25,6 +28,9 @@ type Props = {
     genres: Genre[],
     genresLoading: boolean,
     genresError?: ErrorObject,
+    templates: Template[],
+    templatesLoading: boolean,
+    templatesError?: ErrorObject,
     genrePopularField: FormFieldString,
     genreOtherField: FormFieldString,
     formatField: FormFieldString,
@@ -32,10 +38,12 @@ type Props = {
     logoPositionField: FormFieldString,
     copyrightPositionField: FormFieldString,
     copyrightField: FormFieldString,
+    templateField: FormFieldString,
     example: string,
     exampleLoading: boolean,
     exampleError?: ErrorObject,
     getGenres: () => *,
+    getTemplates: (genre: string) => *,
     formFieldClear: (field: string) => *,
     getExample: (logo?: File, logoAlign: string, copyright?: string, copyrightAlign: string) => *,
 };
@@ -52,16 +60,18 @@ export default class OrdersCreate extends React.Component<Props, State> {
     };
 
     componentWillMount(): void {
-        if (!this.props.genres.length) {
+        if (this.props.genres.length === 0) {
             this.props.getGenres();
         }
     }
 
-    handlePopularGenreSelect = () => {
+    handlePopularGenreSelect = (data: FormFieldChangeData) => {
+        this.props.getTemplates(String(data.value));
         this.props.formFieldClear(this.props.genreOtherField.id);
     };
 
-    handleOtherGenreSelect = () => {
+    handleOtherGenreSelect = (data: FormFieldChangeData) => {
+        this.props.getTemplates(String(data.value));
         this.props.formFieldClear(this.props.genrePopularField.id);
     };
 
@@ -120,9 +130,9 @@ export default class OrdersCreate extends React.Component<Props, State> {
     };
 
     formats = [{
-        id: 'jpg',
-        value: 'Orders.Format.jpg',
-        description: 'Orders.Format.jpg-description',
+        id: 'jpeg',
+        value: 'Orders.Format.jpeg',
+        description: 'Orders.Format.jpeg-description',
     }, {
         id: 'gif',
         value: 'Orders.Format.gif',
@@ -165,6 +175,7 @@ export default class OrdersCreate extends React.Component<Props, State> {
     render() {
         const {
             genres,
+            templates,
             genresLoading,
             genresError,
             genrePopularField,
@@ -174,6 +185,9 @@ export default class OrdersCreate extends React.Component<Props, State> {
             logoPositionField,
             copyrightPositionField,
             copyrightField,
+            templatesLoading,
+            templatesError,
+            templateField,
             example,
             exampleLoading,
             exampleError,
@@ -242,6 +256,25 @@ export default class OrdersCreate extends React.Component<Props, State> {
                     items={this.sizes}
                     translate={false}
                 />
+                <h3>
+                    <FormattedMessage id="Orders.Templates.Title" />
+                </h3>
+                { templatesLoading && (
+                    <Loading size="small" />
+                ) }
+                { templatesError && (
+                    <div>
+                        { templatesError.message }
+                    </div>
+                ) }
+                { !templatesLoading && !templatesError && (
+                    <TemplatesSelectField
+                        id={templateField.id}
+                        templates={templates}
+                        format={formatField.value}
+                        value={templateField.value}
+                    />
+                ) }
                 <RadioButtons
                     id={logoPositionField.id}
                     value={logoPositionField.value}
@@ -315,7 +348,7 @@ export default class OrdersCreate extends React.Component<Props, State> {
                         <img src={example} alt="" />
                     ) }
                     { !exampleError && example && exampleVideo && (
-                        <video controls>
+                        <video autoPlay>
                             <source type="video/mp4" src={example} />
                         </video>
                     ) }
