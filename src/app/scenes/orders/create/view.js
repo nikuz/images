@@ -24,6 +24,8 @@ import type {
 } from '../../../types';
 import './style.css';
 
+const exampleSize = 500;
+
 type Props = {
     genres: Genre[],
     genresLoading: boolean,
@@ -45,7 +47,13 @@ type Props = {
     getGenres: () => *,
     getTemplates: (genre: string) => *,
     formFieldClear: (field: string) => *,
-    getExample: (logo?: File, logoAlign: string, copyright?: string, copyrightAlign: string) => *,
+    getExample: (
+        logo?: File,
+        logoAlign: string,
+        copyright?: string,
+        copyrightAlign: string,
+        template: Object
+    ) => *,
 };
 
 type State = {
@@ -116,16 +124,41 @@ export default class OrdersCreate extends React.Component<Props, State> {
 
     getExample = () => {
         const {
+            genres,
+            genrePopularField,
+            genreOtherField,
             logoPositionField,
             copyrightField,
             copyrightPositionField,
+            templateField,
+            templates,
         } = this.props;
+        const selectedGenre = genres.find(item => (
+            item.id === genrePopularField.value
+            || item.id === genreOtherField.value
+        ));
+        const template = templates.find(item => item.id === templateField.value);
+        const shrinkedTemplate = {
+            ...template,
+            width: exampleSize,
+            height: exampleSize,
+            animate: template && template.format !== 'jpeg',
+            genre: selectedGenre && selectedGenre.id,
+        };
+
+        delete shrinkedTemplate.image;
+        Object.keys(shrinkedTemplate).forEach((key) => {
+            if (key.indexOf('_') !== -1) {
+                delete shrinkedTemplate[key];
+            }
+        });
 
         this.props.getExample(
             this.state.logo,
             logoPositionField.value,
             copyrightField.value,
-            copyrightPositionField.value
+            copyrightPositionField.value,
+            shrinkedTemplate
         );
     };
 
@@ -335,6 +368,7 @@ export default class OrdersCreate extends React.Component<Props, State> {
                 />
                 <ButtonBlue
                     text="Orders.Get.Example"
+                    disabled={!templates.length || !templateField.value}
                     onClick={this.getExample}
                 />
                 <div>

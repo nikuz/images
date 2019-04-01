@@ -102,7 +102,7 @@ export default function languageReducer(
                 ...state,
                 exampleLoading: false,
                 exampleError: undefined,
-                example: payload,
+                example: payload && payload.example,
             };
 
         case ORDER_EXAMPLE_FAILURE:
