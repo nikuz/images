@@ -13,13 +13,14 @@ type Props = {
     form: FormReducerState,
     templates: Template[],
     format: string,
-    value?: FormFieldValue,
+    crop: string,
+    value: FormFieldValue[],
     className?: string | { [className: string]: * },
     itemClassName?: string,
     id: string,
     apiUrl: string,
     onChange?: (data: Object) => *,
-    valueChange: (field: string, value: FormFieldValue) => *,
+    valueChange: (field: string, value: FormFieldValue[]) => *,
     clear: (field: string) => *,
 };
 
@@ -35,12 +36,20 @@ export default class TemplateSelect extends React.Component<Props> {
         this.props.clear(this.props.id);
     }
 
-    onChangeHandler = (value: string) => {
+    onChangeHandler = (data: string) => {
         const {
             id,
             valueChange,
             onChange,
         } = this.props;
+        const value = this.props.value.slice(0);
+
+        const added = value.findIndex(item => item === data);
+        if (added !== -1) {
+            value.splice(added, 1);
+        } else {
+            value.push(data);
+        }
 
         valueChange(id, value);
         if (onChange && onChange instanceof Function) {
@@ -55,25 +64,29 @@ export default class TemplateSelect extends React.Component<Props> {
         const {
             templates,
             format,
+            crop,
             value,
             apiUrl,
             className,
             itemClassName,
         } = this.props;
 
-        const selectedItem = templates.find(item => item.id === value);
+        const filteredTemplates = templates.filter(item => (
+            item.format === format
+            && item.crop === crop
+        ));
 
         return (
             <div className={className}>
                 <div className="templates-selector-field-container">
-                    {templates.filter(item => item.format === format).map((item) => {
+                    {filteredTemplates.map((item) => {
                         const url = `${apiUrl}${item.image}`;
                         return (
                             <TemplateSelectItem
                                 key={item.id}
                                 id={item.id}
                                 url={url}
-                                selected={selectedItem && item.id === selectedItem.id}
+                                selected={value.includes(item.id)}
                                 format={item.format}
                                 className={itemClassName}
                                 onChange={this.onChangeHandler}

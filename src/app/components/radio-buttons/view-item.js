@@ -61,7 +61,7 @@ export default class RadioButtonItem extends React.PureComponent<Props, void> {
                 }
                 { description && (
                     <span className="radio-button-description">
-                        { translate
+                        { translate && typeof description === 'string'
                             ? <FormattedMessage id={description} />
                             : description
                         }

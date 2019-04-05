@@ -77,7 +77,7 @@ export default class RadioButtons extends React.Component<Props, void> {
                 <div className="radio-buttons">
                     {items.map(item => (
                         <RadioButtonItem
-                            key={item.value.toString()}
+                            key={item.id}
                             group={id}
                             id={item.id}
                             value={item.value}

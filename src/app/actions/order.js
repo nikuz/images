@@ -5,10 +5,7 @@ import {
     actionCreator,
     request,
 } from '../utils';
-import {
-    profileSelectors,
-    routerSelectors,
-} from '../selectors';
+import { routerSelectors } from '../selectors';
 import { orderConstants } from '../constants';
 
 const {
@@ -18,16 +15,15 @@ const {
     ORDER_TEMPLATES_REQUEST,
     ORDER_TEMPLATES_SUCCESS,
     ORDER_TEMPLATES_FAILURE,
+    ORDER_PACK_SIZES_REQUEST,
+    ORDER_PACK_SIZES_SUCCESS,
+    ORDER_PACK_SIZES_FAILURE,
     ORDER_EXAMPLE_REQUEST,
     ORDER_EXAMPLE_SUCCESS,
     ORDER_EXAMPLE_FAILURE,
 } = orderConstants;
 
-export const getGenres = () => (
-    dispatch: DispatchAPI<*>,
-    getState: () => Object
-) => {
-    const token = profileSelectors.getToken(getState()) || '';
+export const getGenres = () => (dispatch: DispatchAPI<*>) => {
     const apiUrl = routerSelectors.getApiUrl();
     return actionCreator({
         dispatch,
@@ -36,18 +32,11 @@ export const getGenres = () => (
         failureAction: ORDER_GENRES_FAILURE,
         action: () => request.get({
             url: `${apiUrl}/genres`,
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
         }),
     });
 };
 
-export const getTemplates = (genre: string) => (
-    dispatch: DispatchAPI<*>,
-    getState: () => Object
-) => {
-    const token = profileSelectors.getToken(getState()) || '';
+export const getTemplates = (genre: string) => (dispatch: DispatchAPI<*>) => {
     const apiUrl = routerSelectors.getApiUrl();
     return actionCreator({
         dispatch,
@@ -56,24 +45,24 @@ export const getTemplates = (genre: string) => (
         failureAction: ORDER_TEMPLATES_FAILURE,
         action: () => request.get({
             url: `${apiUrl}/templates?genre=${genre}`,
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
         }),
     });
 };
 
-export const getExample = (
-    logo?: File,
-    logoAlign: string,
-    copyright?: string,
-    copyrightAlign: string,
-    template: Object
-) => (
-    dispatch: DispatchAPI<*>,
-    getState: () => Object
-) => {
-    const token = profileSelectors.getToken(getState()) || '';
+export const getPackSizes = () => (dispatch: DispatchAPI<*>) => {
+    const apiUrl = routerSelectors.getApiUrl();
+    return actionCreator({
+        dispatch,
+        requestAction: ORDER_PACK_SIZES_REQUEST,
+        successAction: ORDER_PACK_SIZES_SUCCESS,
+        failureAction: ORDER_PACK_SIZES_FAILURE,
+        action: () => request.get({
+            url: `${apiUrl}/packsizes`,
+        }),
+    });
+};
+
+export const getExample = (data: Object) => (dispatch: DispatchAPI<*>) => {
     const apiUrl = routerSelectors.getApiUrl();
     actionCreator({
         dispatch,
@@ -82,16 +71,7 @@ export const getExample = (
         failureAction: ORDER_EXAMPLE_FAILURE,
         action: () => request.post({
             url: `${apiUrl}/examples/get`,
-            args: {
-                logo,
-                logoAlign,
-                copyright,
-                copyrightAlign,
-                ...template,
-            },
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            args: data,
         }),
     });
 };

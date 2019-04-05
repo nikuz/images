@@ -26,7 +26,7 @@ export const isOnOrders: (StoreState) => boolean = createSelector(
     path => path === routerConstants.ORDERS
 );
 
-export const isOnOrdersCreatePage: (StoreState) => boolean = createSelector(
+export const isOnCreateOrderPage: (StoreState) => boolean = createSelector(
     getLocationPath,
-    path => path === routerConstants.ORDERS_CREATE
+    path => path === routerConstants.CREATE_ORDER
 );

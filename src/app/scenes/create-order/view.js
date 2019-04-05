@@ -6,25 +6,28 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 // import { routerConstants } from '../../../constants';
 import {
+    BackButton,
     Loading,
     RadioButtons,
     SelectField,
     ButtonBlue,
+    ButtonGreen,
     ButtonTransparent,
     Icon,
     TextField,
     TemplatesSelectField,
-} from '../../../components';
+} from '../../components';
+import { commonUtils } from '../../utils';
 import type {
     ErrorObject,
     Genre,
     Template,
     FormFieldString,
+    FormFieldNumber,
     FormFieldChangeData,
-} from '../../../types';
+    PackSize,
+} from '../../types';
 import './style.css';
-
-const exampleSize = 500;
 
 type Props = {
     genres: Genre[],
@@ -33,6 +36,9 @@ type Props = {
     templates: Template[],
     templatesLoading: boolean,
     templatesError?: ErrorObject,
+    packSizes: PackSize[],
+    packSizesLoading: boolean,
+    packSizesError?: ErrorObject,
     genrePopularField: FormFieldString,
     genreOtherField: FormFieldString,
     formatField: FormFieldString,
@@ -40,20 +46,16 @@ type Props = {
     logoPositionField: FormFieldString,
     copyrightPositionField: FormFieldString,
     copyrightField: FormFieldString,
-    templateField: FormFieldString,
+    templatesField: FormFieldString,
+    packSizeField: FormFieldNumber,
     example: string,
     exampleLoading: boolean,
     exampleError?: ErrorObject,
     getGenres: () => *,
     getTemplates: (genre: string) => *,
+    getPackSizes: () => *,
     formFieldClear: (field: string) => *,
-    getExample: (
-        logo?: File,
-        logoAlign: string,
-        copyright?: string,
-        copyrightAlign: string,
-        template: Object
-    ) => *,
+    getExample: (data: Object) => *,
 };
 
 type State = {
@@ -70,6 +72,9 @@ export default class OrdersCreate extends React.Component<Props, State> {
     componentWillMount(): void {
         if (this.props.genres.length === 0) {
             this.props.getGenres();
+        }
+        if (this.props.packSizes.length === 0) {
+            this.props.getPackSizes();
         }
     }
 
@@ -130,36 +135,34 @@ export default class OrdersCreate extends React.Component<Props, State> {
             logoPositionField,
             copyrightField,
             copyrightPositionField,
-            templateField,
-            templates,
+            templatesField,
         } = this.props;
         const selectedGenre = genres.find(item => (
             item.id === genrePopularField.value
             || item.id === genreOtherField.value
         ));
-        const template = templates.find(item => item.id === templateField.value);
-        const shrinkedTemplate = {
-            ...template,
-            width: exampleSize,
-            height: exampleSize,
-            animate: template && template.format !== 'jpeg',
+
+        this.props.getExample({
+            logo: this.state.logo,
+            logoAlign: logoPositionField.value,
+            copyright: copyrightField.value,
+            copyrightAlign: copyrightPositionField.value,
+            templates: templatesField.value,
             genre: selectedGenre && selectedGenre.id,
-        };
-
-        delete shrinkedTemplate.image;
-        Object.keys(shrinkedTemplate).forEach((key) => {
-            if (key.indexOf('_') !== -1) {
-                delete shrinkedTemplate[key];
-            }
         });
+    };
 
-        this.props.getExample(
-            this.state.logo,
-            logoPositionField.value,
-            copyrightField.value,
-            copyrightPositionField.value,
-            shrinkedTemplate
-        );
+    submitHandler = () => {
+        // const {
+        //     genres,
+        //     genrePopularField,
+        //     genreOtherField,
+        //     logoPositionField,
+        //     copyrightField,
+        //     copyrightPositionField,
+        //     templatesField,
+        //     templates,
+        // } = this.props;
     };
 
     formats = [{
@@ -209,6 +212,7 @@ export default class OrdersCreate extends React.Component<Props, State> {
         const {
             genres,
             templates,
+            packSizes,
             genresLoading,
             genresError,
             genrePopularField,
@@ -218,9 +222,12 @@ export default class OrdersCreate extends React.Component<Props, State> {
             logoPositionField,
             copyrightPositionField,
             copyrightField,
+            packSizeField,
+            packSizesLoading,
+            packSizesError,
             templatesLoading,
             templatesError,
-            templateField,
+            templatesField,
             example,
             exampleLoading,
             exampleError,
@@ -234,20 +241,26 @@ export default class OrdersCreate extends React.Component<Props, State> {
         const otherGenres = genres.slice(3);
         const exampleVideo = example && example.indexOf('video/mp4') !== -1;
 
-        if (genresLoading) {
+        if (genresLoading || packSizesLoading) {
             return <Loading size="small" />;
         }
 
-        if (genresError) {
+        if (genresError || packSizesError) {
             return (
                 <div>
-                    { genresError.message }
+                    {
+                        (genresError && genresError.message)
+                        || (packSizesError && packSizesError.message)
+                    }
                 </div>
             );
         }
 
         return (
             <div>
+                <BackButton
+                    text="Orders.Back"
+                />
                 <div className="order-genres-container">
                     <RadioButtons
                         id={genrePopularField.id}
@@ -302,10 +315,11 @@ export default class OrdersCreate extends React.Component<Props, State> {
                 ) }
                 { !templatesLoading && !templatesError && (
                     <TemplatesSelectField
-                        id={templateField.id}
+                        id={templatesField.id}
                         templates={templates}
                         format={formatField.value}
-                        value={templateField.value}
+                        crop={commonUtils.getCropSize(sizeField.value)}
+                        value={templatesField.value}
                     />
                 ) }
                 <RadioButtons
@@ -367,8 +381,8 @@ export default class OrdersCreate extends React.Component<Props, State> {
                     className=""
                 />
                 <ButtonBlue
-                    text="Orders.Get.Example"
-                    disabled={!templates.length || !templateField.value}
+                    text="Orders.Example-Get"
+                    disabled={!templates.length || !templatesField.value.length}
                     onClick={this.getExample}
                 />
                 <div>
@@ -387,6 +401,38 @@ export default class OrdersCreate extends React.Component<Props, State> {
                         </video>
                     ) }
                 </div>
+                <RadioButtons
+                    id={packSizeField.id}
+                    value={packSizeField.value}
+                    items={packSizes.map(item => ({
+                        id: item.id,
+                        value: (
+                            <span>
+                                $
+                                {item.price}
+                            </span>
+                        ),
+                        description: (
+                            <span>
+                                {item.discount}
+                                %
+                                &nbsp;
+                                <FormattedMessage id="Orders.Discount" />
+                            </span>
+                        ),
+                    }))}
+                    label="Orders.Pack-Size"
+                />
+                <ButtonGreen
+                    text="Orders.Submit"
+                    disabled={
+                        !templates.length
+                        || !templatesField.value.length
+                        || !sizeField.value
+                        || !packSizeField.value
+                    }
+                    onClick={this.submitHandler}
+                />
             </div>
         );
     }

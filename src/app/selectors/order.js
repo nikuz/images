@@ -6,6 +6,7 @@ import type { OrderReducerState } from '../reducers/order';
 import type {
     Genre,
     Template,
+    PackSize,
 } from '../types';
 
 const orderSelector = (state: StoreState): OrderReducerState => state.order;
@@ -22,4 +23,9 @@ export const getGenres: (StoreState) => Genre[] = createSelector(
 export const getTemplates: (StoreState) => Template[] = createSelector(
     orderSelector,
     order => order.templates
+);
+
+export const getPackSizes: (StoreState) => PackSize[] = createSelector(
+    orderSelector,
+    order => order.packSizes
 );

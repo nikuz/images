@@ -40,6 +40,11 @@ export default class Home extends React.Component<Props> { // eslint-disable-lin
                         </Link>
                     </div>
                 ) }
+                <ButtonBlue>
+                    <Link to={routerConstants.CREATE_ORDER}>
+                        <FormattedMessage id="Home.Orders.Create" />
+                    </Link>
+                </ButtonBlue>
             </div>
         );
     }

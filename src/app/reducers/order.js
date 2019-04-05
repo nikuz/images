@@ -4,6 +4,7 @@ import { orderConstants } from '../constants';
 import type {
     Genre,
     Template,
+    PackSize,
 } from '../types';
 
 const {
@@ -13,6 +14,9 @@ const {
     ORDER_TEMPLATES_REQUEST,
     ORDER_TEMPLATES_SUCCESS,
     ORDER_TEMPLATES_FAILURE,
+    ORDER_PACK_SIZES_REQUEST,
+    ORDER_PACK_SIZES_SUCCESS,
+    ORDER_PACK_SIZES_FAILURE,
     ORDER_EXAMPLE_REQUEST,
     ORDER_EXAMPLE_SUCCESS,
     ORDER_EXAMPLE_FAILURE,
@@ -25,6 +29,9 @@ export type OrderReducerState = {
     templates: Template[],
     templatesLoading: boolean,
     templatesError: ?Error,
+    packSizes: PackSize[],
+    packSizesLoading: boolean,
+    packSizesError: ?Error,
     example?: string,
     exampleLoading: boolean,
     exampleError: ?Error,
@@ -37,6 +44,9 @@ const initialState = {
     templates: [],
     templatesLoading: false,
     templatesError: undefined,
+    packSizes: [],
+    packSizesLoading: false,
+    packSizesError: undefined,
     example: undefined,
     exampleLoading: false,
     exampleError: undefined,
@@ -88,6 +98,27 @@ export default function languageReducer(
                 ...state,
                 templatesLoading: false,
                 templatesError: payload,
+            };
+
+        case ORDER_PACK_SIZES_REQUEST:
+            return {
+                ...state,
+                packSizesLoading: true,
+                packSizesError: undefined,
+            };
+
+        case ORDER_PACK_SIZES_SUCCESS:
+            return {
+                ...state,
+                packSizes: payload,
+                packSizesLoading: false,
+            };
+
+        case ORDER_PACK_SIZES_FAILURE:
+            return {
+                ...state,
+                packSizesLoading: false,
+                packSizesError: payload,
             };
 
         case ORDER_EXAMPLE_REQUEST:

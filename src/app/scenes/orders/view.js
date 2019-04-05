@@ -36,7 +36,7 @@ export default class Orders extends React.Component<Props> {
                 { isOnOrders && (
                     <div className="inline-block">
                         <ButtonBlue>
-                            <Link to={routerConstants.ORDERS_CREATE}>
+                            <Link to={routerConstants.CREATE_ORDER}>
                                 <FormattedMessage id="Orders.Create" />
                             </Link>
                         </ButtonBlue>

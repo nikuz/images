@@ -26,4 +26,14 @@ export type Template = {
     textFontFamily: string,
     textVerticalAlign: string,
     updatedAt: string,
+    crop: number,
+    originalImage: string,
+    originalFileId: string,
+};
+
+export type PackSize = {
+    id: string,
+    size: number,
+    price: number,
+    discount: number,
 };
