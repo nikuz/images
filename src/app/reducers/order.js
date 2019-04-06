@@ -5,6 +5,7 @@ import type {
     Genre,
     Template,
     PackSize,
+    Order,
 } from '../types';
 
 const {
@@ -23,23 +24,33 @@ const {
     ORDER_SHOW_REGISTRATION_OVERLAY,
     ORDER_SHOW_LOGIN_OVERLAY,
     ORDER_HIDE_LOGIN_OVERLAYS,
+    ORDER_CREATE_REQUEST,
+    ORDER_CREATE_SUCCESS,
+    ORDER_CREATE_FAILURE,
+    ORDER_SHOW_PAYMENT_OVERLAY,
+    ORDER_HIDE_PAYMENT_OVERLAY,
+    ORDER_CLEAR_STATE,
 } = orderConstants;
 
 export type OrderReducerState = {
     genres: Genre[],
     genresLoading: boolean,
-    genresError: ?Error,
+    genresError?: Error,
     templates: Template[],
     templatesLoading: boolean,
-    templatesError: ?Error,
+    templatesError?: Error,
     packSizes: PackSize[],
     packSizesLoading: boolean,
-    packSizesError: ?Error,
+    packSizesError?: Error,
     example?: string,
     exampleLoading: boolean,
-    exampleError: ?Error,
+    exampleError?: Error,
     registrationOverlayShown: boolean,
     loginOverlayShown: boolean,
+    order?: Order,
+    createLoading: boolean,
+    createError?: Error,
+    paymentOverlayShown: boolean,
 };
 
 const initialState = {
@@ -57,6 +68,10 @@ const initialState = {
     exampleError: undefined,
     registrationOverlayShown: false,
     loginOverlayShown: false,
+    order: undefined,
+    createLoading: false,
+    createError: undefined,
+    paymentOverlayShown: false,
 };
 
 export default function languageReducer(
@@ -169,6 +184,50 @@ export default function languageReducer(
                 ...state,
                 registrationOverlayShown: false,
                 loginOverlayShown: false,
+            };
+
+        case ORDER_CREATE_REQUEST:
+            return {
+                ...state,
+                order: undefined,
+                createLoading: true,
+                createError: undefined,
+            };
+
+        case ORDER_CREATE_SUCCESS:
+            return {
+                ...state,
+                createLoading: false,
+                order: payload,
+            };
+
+        case ORDER_CREATE_FAILURE:
+            return {
+                ...state,
+                createLoading: false,
+                createError: payload,
+            };
+
+        case ORDER_SHOW_PAYMENT_OVERLAY:
+            return {
+                ...state,
+                paymentOverlayShown: true,
+            };
+
+        case ORDER_HIDE_PAYMENT_OVERLAY:
+            return {
+                ...state,
+                paymentOverlayShown: false,
+            };
+
+        case ORDER_CLEAR_STATE:
+            return {
+                ...state,
+                genresError: undefined,
+                packSizesError: undefined,
+                templatesError: undefined,
+                example: undefined,
+                exampleError: undefined,
             };
 
         default:

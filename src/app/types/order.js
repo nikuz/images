@@ -1,5 +1,7 @@
 // @flow
 
+import type { User } from './profile';
+
 export type Genre = {
     id: string,
     name: string,
@@ -36,4 +38,23 @@ export type PackSize = {
     size: number,
     price: number,
     discount: number,
+};
+
+
+export type Order = {
+    copyright: string,
+    copyrightAlign: string,
+    createdAt: string,
+    crop: number,
+    format: string,
+    genre: Genre,
+    id: string,
+    logo: string,
+    logoAlign: string,
+    logoFileId: string,
+    packsize: PackSize,
+    status: string,
+    templates: string,
+    updatedAt: string,
+    user: User,
 };

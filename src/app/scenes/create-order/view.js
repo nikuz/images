@@ -1,10 +1,8 @@
 // @flow
 
 import * as React from 'react';
-// import { Link } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
-// import { routerConstants } from '../../../constants';
 import {
     BackButton,
     Loading,
@@ -17,6 +15,7 @@ import {
     TextField,
     TemplatesSelectField,
     Overlay,
+    OverlayLoading,
     Login,
     Registration,
 } from '../../components';
@@ -30,7 +29,9 @@ import type {
     FormFieldNumber,
     FormFieldChangeData,
     PackSize,
+    Order,
 } from '../../types';
+import PaymentOverlay from './payment';
 import './style.css';
 
 type Props = {
@@ -58,6 +59,10 @@ type Props = {
     exampleError?: ErrorObject,
     registrationOverlayShown: boolean,
     loginOverlayShown: boolean,
+    createLoading: boolean,
+    createError?: ErrorObject,
+    order?: Order,
+    paymentOverlayShown: boolean,
     getGenres: () => *,
     getTemplates: (genre: string) => *,
     getPackSizes: () => *,
@@ -66,6 +71,9 @@ type Props = {
     showRegistrationOverlay: () => *,
     showLoginOverlay: () => *,
     hideLoginOverlays: () => *,
+    clearOrderState: () => *,
+    createOrder: (data: Object) => *,
+    showPaymentOverlay: () => *,
 };
 
 type State = {
@@ -73,7 +81,7 @@ type State = {
     logo?: File,
 };
 
-export default class OrdersCreate extends React.Component<Props, State> {
+export default class OrderCreate extends React.Component<Props, State> {
     state = {
         isDragging: false,
         logo: undefined,
@@ -88,10 +96,18 @@ export default class OrdersCreate extends React.Component<Props, State> {
         }
     }
 
-    componentWillReceiveProps(nextProps: Props): void {
-        if (nextProps.user && !this.props.user) {
+    componentDidUpdate(prevProps: Props): void {
+        if (!prevProps.user && this.props.user) {
             this.props.hideLoginOverlays();
+            this.submitHandler();
         }
+        if (!prevProps.order && this.props.order) {
+            this.props.showPaymentOverlay();
+        }
+    }
+
+    componentWillUnmount(): void {
+        this.props.clearOrderState();
     }
 
     handlePopularGenreSelect = (data: FormFieldChangeData) => {
@@ -172,7 +188,37 @@ export default class OrdersCreate extends React.Component<Props, State> {
         const { user } = this.props;
         if (!user) {
             this.props.showRegistrationOverlay();
+            return;
         }
+
+        const {
+            genres,
+            genrePopularField,
+            genreOtherField,
+            formatField,
+            sizeField,
+            logoPositionField,
+            copyrightField,
+            copyrightPositionField,
+            templatesField,
+            packSizeField,
+        } = this.props;
+
+        const selectedGenre = genres.find(item => (
+            item.id === genrePopularField.value
+            || item.id === genreOtherField.value
+        ));
+
+        this.props.createOrder({
+            templates: templatesField.value,
+            genre: selectedGenre && selectedGenre.id,
+            format: formatField.value,
+            crop: commonUtils.getCropSize(sizeField.value),
+            logoAlign: logoPositionField.value,
+            copyright: copyrightField.value,
+            copyrightAlign: copyrightPositionField.value,
+            packsize: packSizeField.value,
+        });
     };
 
     formats = [{
@@ -243,6 +289,9 @@ export default class OrdersCreate extends React.Component<Props, State> {
             exampleError,
             registrationOverlayShown,
             loginOverlayShown,
+            createLoading,
+            createError,
+            paymentOverlayShown,
         } = this.props;
         const {
             logo,
@@ -252,6 +301,7 @@ export default class OrdersCreate extends React.Component<Props, State> {
         const popularGenres = genres.slice(0, 3);
         const otherGenres = genres.slice(3);
         const exampleVideo = example && example.indexOf('video/mp4') !== -1;
+        const genreSelected = genrePopularField.value || genreOtherField.value;
 
         if (genresLoading || packSizesLoading) {
             return <Loading size="small" />;
@@ -325,7 +375,7 @@ export default class OrdersCreate extends React.Component<Props, State> {
                         { templatesError.message }
                     </div>
                 ) }
-                { !templatesLoading && !templatesError && (
+                { genreSelected && !templatesLoading && !templatesError && (
                     <TemplatesSelectField
                         id={templatesField.id}
                         templates={templates}
@@ -394,7 +444,11 @@ export default class OrdersCreate extends React.Component<Props, State> {
                 />
                 <ButtonBlue
                     text="Orders.Example-Get"
-                    disabled={!templates.length || !templatesField.value.length}
+                    disabled={
+                        !genreSelected
+                        || !templates.length
+                        || !templatesField.value.length
+                    }
                     onClick={this.getExample}
                 />
                 <div>
@@ -438,7 +492,8 @@ export default class OrdersCreate extends React.Component<Props, State> {
                 <ButtonGreen
                     text="Orders.Submit"
                     disabled={
-                        !templates.length
+                        !genreSelected
+                        || !templates.length
                         || !templatesField.value.length
                         || !sizeField.value
                         || !packSizeField.value
@@ -460,6 +515,17 @@ export default class OrdersCreate extends React.Component<Props, State> {
                             onGoToLogin={this.props.showLoginOverlay}
                         />
                     </Overlay>
+                ) }
+                { createLoading && (
+                    <OverlayLoading />
+                ) }
+                { createError && (
+                    <div>
+                        { createError.message }
+                    </div>
+                ) }
+                { paymentOverlayShown && (
+                    <PaymentOverlay />
                 ) }
             </div>
         );

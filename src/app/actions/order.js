@@ -5,7 +5,10 @@ import {
     actionCreator,
     request,
 } from '../utils';
-import { routerSelectors } from '../selectors';
+import {
+    routerSelectors,
+    profileSelectors,
+} from '../selectors';
 import { orderConstants } from '../constants';
 
 const {
@@ -24,6 +27,12 @@ const {
     ORDER_SHOW_REGISTRATION_OVERLAY,
     ORDER_SHOW_LOGIN_OVERLAY,
     ORDER_HIDE_LOGIN_OVERLAYS,
+    ORDER_CREATE_REQUEST,
+    ORDER_CREATE_SUCCESS,
+    ORDER_CREATE_FAILURE,
+    ORDER_SHOW_PAYMENT_OVERLAY,
+    ORDER_HIDE_PAYMENT_OVERLAY,
+    ORDER_CLEAR_STATE,
 } = orderConstants;
 
 export const getGenres = () => (dispatch: DispatchAPI<*>) => {
@@ -65,8 +74,13 @@ export const getPackSizes = () => (dispatch: DispatchAPI<*>) => {
     });
 };
 
-export const getExample = (data: Object) => (dispatch: DispatchAPI<*>) => {
+export const getExample = (data: Object) => (dispatch: DispatchAPI<*>, getState: () => Object) => {
     const apiUrl = routerSelectors.getApiUrl();
+    const token = profileSelectors.getToken(getState());
+    const headers = {};
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
     actionCreator({
         dispatch,
         requestAction: ORDER_EXAMPLE_REQUEST,
@@ -75,6 +89,7 @@ export const getExample = (data: Object) => (dispatch: DispatchAPI<*>) => {
         action: () => request.post({
             url: `${apiUrl}/examples/get`,
             args: data,
+            headers,
         }),
     });
 };
@@ -91,3 +106,34 @@ export const hideLoginOverlays = () => ({
     type: ORDER_HIDE_LOGIN_OVERLAYS,
 });
 
+export const createOrder = (data: Object) => (dispatch: DispatchAPI<*>, getState: () => Object) => {
+    const apiUrl = routerSelectors.getApiUrl();
+    const token = profileSelectors.getToken(getState());
+    const headers = {};
+    if (token) {
+        headers.Authorization = `Bearer ${token}`;
+    }
+    actionCreator({
+        dispatch,
+        requestAction: ORDER_CREATE_REQUEST,
+        successAction: ORDER_CREATE_SUCCESS,
+        failureAction: ORDER_CREATE_FAILURE,
+        action: () => request.post({
+            url: `${apiUrl}/orders`,
+            args: data,
+            headers,
+        }),
+    });
+};
+
+export const showPaymentOverlay = () => ({
+    type: ORDER_SHOW_PAYMENT_OVERLAY,
+});
+
+export const hidePaymentOverlay = () => ({
+    type: ORDER_HIDE_PAYMENT_OVERLAY,
+});
+
+export const clearOrderState = () => ({
+    type: ORDER_CLEAR_STATE,
+});

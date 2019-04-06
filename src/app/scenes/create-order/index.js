@@ -1,7 +1,5 @@
 // @flow
 
-// import { bindActionCreators } from 'redux';
-// import { DispatchAPI } from 'redux';
 import { connect } from 'react-redux';
 import type { StoreState } from '../../reducers';
 import {
@@ -13,8 +11,6 @@ import {
     formSelectors,
     profileSelectors,
 } from '../../selectors';
-// import { history } from '../../../store';
-// import { routerConstants } from '../../../constants';
 import View from './view';
 
 const mapStateToProps = (state: StoreState) => ({
@@ -42,6 +38,10 @@ const mapStateToProps = (state: StoreState) => ({
     exampleError: state.order.exampleError,
     registrationOverlayShown: state.order.registrationOverlayShown,
     loginOverlayShown: state.order.loginOverlayShown,
+    createLoading: state.order.createLoading,
+    createError: state.order.createError,
+    order: state.order.order,
+    paymentOverlayShown: state.order.paymentOverlayShown,
 });
 
 const mapDispatchToProps = ({
@@ -53,6 +53,9 @@ const mapDispatchToProps = ({
     showRegistrationOverlay: orderActions.showRegistrationOverlay,
     showLoginOverlay: orderActions.showLoginOverlay,
     hideLoginOverlays: orderActions.hideLoginOverlays,
+    clearOrderState: orderActions.clearOrderState,
+    createOrder: orderActions.createOrder,
+    showPaymentOverlay: orderActions.showPaymentOverlay,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);
