@@ -11,8 +11,8 @@ import { routerConstants } from './constants';
 
 import Launcher from './scenes/launcher';
 import Home from './scenes/home';
-import Login from './scenes/login';
-import Registration from './scenes/registration';
+import LoginPage from './scenes/login';
+import RegistrationPage from './scenes/registration';
 import Orders from './scenes/orders';
 import CreateOrder from './scenes/create-order';
 
@@ -28,12 +28,12 @@ export default () => (
                 <Route
                     exact
                     path={routerConstants.LOGIN}
-                    component={Login}
+                    component={LoginPage}
                 />
                 <Route
                     exact
                     path={routerConstants.REGISTRATION}
-                    component={Registration}
+                    component={RegistrationPage}
                 />
                 <Orders path={routerConstants.ORDERS} />
                 <Route

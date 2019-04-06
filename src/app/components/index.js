@@ -22,6 +22,8 @@ import RadioButtons from './radio-buttons';
 import SelectField from './select-field';
 import TextField from './text-field';
 import TemplatesSelectField from './template-select-field';
+import Login from './login';
+import Registration from './registration';
 
 export {
     Button,
@@ -44,4 +46,6 @@ export {
     SelectField,
     TextField,
     TemplatesSelectField,
+    Login,
+    Registration,
 };

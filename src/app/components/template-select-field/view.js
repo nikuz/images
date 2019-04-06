@@ -29,8 +29,22 @@ export default class TemplateSelect extends React.Component<Props> {
         nextProps.value !== this.props.value
         || nextProps.templates !== this.props.templates
         || nextProps.format !== this.props.format
+        || nextProps.crop !== this.props.crop
         || nextProps.form[nextProps.id] !== this.props.form[this.props.id]
     );
+
+    componentWillReceiveProps(nextProps: Props): void {
+        const {
+            id,
+            crop,
+            value,
+            valueChange,
+        } = this.props;
+
+        if (crop !== nextProps.crop && value.length !== 0) {
+            valueChange(id, []);
+        }
+    }
 
     componentWillUnmount() {
         this.props.clear(this.props.id);

@@ -11,12 +11,14 @@ import {
 import {
     orderSelectors,
     formSelectors,
+    profileSelectors,
 } from '../../selectors';
 // import { history } from '../../../store';
 // import { routerConstants } from '../../../constants';
 import View from './view';
 
 const mapStateToProps = (state: StoreState) => ({
+    user: profileSelectors.getUser(state),
     genres: orderSelectors.getGenres(state),
     genresLoading: state.order.genresLoading,
     genresError: state.order.genresError,
@@ -38,6 +40,8 @@ const mapStateToProps = (state: StoreState) => ({
     example: state.order.example,
     exampleLoading: state.order.exampleLoading,
     exampleError: state.order.exampleError,
+    registrationOverlayShown: state.order.registrationOverlayShown,
+    loginOverlayShown: state.order.loginOverlayShown,
 });
 
 const mapDispatchToProps = ({
@@ -46,6 +50,9 @@ const mapDispatchToProps = ({
     getPackSizes: orderActions.getPackSizes,
     formFieldClear: formActions.fieldClear,
     getExample: orderActions.getExample,
+    showRegistrationOverlay: orderActions.showRegistrationOverlay,
+    showLoginOverlay: orderActions.showLoginOverlay,
+    hideLoginOverlays: orderActions.hideLoginOverlays,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(View);

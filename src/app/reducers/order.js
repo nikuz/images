@@ -20,6 +20,9 @@ const {
     ORDER_EXAMPLE_REQUEST,
     ORDER_EXAMPLE_SUCCESS,
     ORDER_EXAMPLE_FAILURE,
+    ORDER_SHOW_REGISTRATION_OVERLAY,
+    ORDER_SHOW_LOGIN_OVERLAY,
+    ORDER_HIDE_LOGIN_OVERLAYS,
 } = orderConstants;
 
 export type OrderReducerState = {
@@ -35,6 +38,8 @@ export type OrderReducerState = {
     example?: string,
     exampleLoading: boolean,
     exampleError: ?Error,
+    registrationOverlayShown: boolean,
+    loginOverlayShown: boolean,
 };
 
 const initialState = {
@@ -50,6 +55,8 @@ const initialState = {
     example: undefined,
     exampleLoading: false,
     exampleError: undefined,
+    registrationOverlayShown: false,
+    loginOverlayShown: false,
 };
 
 export default function languageReducer(
@@ -141,6 +148,27 @@ export default function languageReducer(
                 ...state,
                 exampleLoading: false,
                 exampleError: payload,
+            };
+
+        case ORDER_SHOW_REGISTRATION_OVERLAY:
+            return {
+                ...state,
+                registrationOverlayShown: true,
+                loginOverlayShown: false,
+            };
+
+        case ORDER_SHOW_LOGIN_OVERLAY:
+            return {
+                ...state,
+                loginOverlayShown: true,
+                registrationOverlayShown: false,
+            };
+
+        case ORDER_HIDE_LOGIN_OVERLAYS:
+            return {
+                ...state,
+                registrationOverlayShown: false,
+                loginOverlayShown: false,
             };
 
         default:

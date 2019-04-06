@@ -16,9 +16,13 @@ import {
     Icon,
     TextField,
     TemplatesSelectField,
+    Overlay,
+    Login,
+    Registration,
 } from '../../components';
 import { commonUtils } from '../../utils';
 import type {
+    User,
     ErrorObject,
     Genre,
     Template,
@@ -30,6 +34,7 @@ import type {
 import './style.css';
 
 type Props = {
+    user: User,
     genres: Genre[],
     genresLoading: boolean,
     genresError?: ErrorObject,
@@ -51,11 +56,16 @@ type Props = {
     example: string,
     exampleLoading: boolean,
     exampleError?: ErrorObject,
+    registrationOverlayShown: boolean,
+    loginOverlayShown: boolean,
     getGenres: () => *,
     getTemplates: (genre: string) => *,
     getPackSizes: () => *,
     formFieldClear: (field: string) => *,
     getExample: (data: Object) => *,
+    showRegistrationOverlay: () => *,
+    showLoginOverlay: () => *,
+    hideLoginOverlays: () => *,
 };
 
 type State = {
@@ -75,6 +85,12 @@ export default class OrdersCreate extends React.Component<Props, State> {
         }
         if (this.props.packSizes.length === 0) {
             this.props.getPackSizes();
+        }
+    }
+
+    componentWillReceiveProps(nextProps: Props): void {
+        if (nextProps.user && !this.props.user) {
+            this.props.hideLoginOverlays();
         }
     }
 
@@ -153,16 +169,10 @@ export default class OrdersCreate extends React.Component<Props, State> {
     };
 
     submitHandler = () => {
-        // const {
-        //     genres,
-        //     genrePopularField,
-        //     genreOtherField,
-        //     logoPositionField,
-        //     copyrightField,
-        //     copyrightPositionField,
-        //     templatesField,
-        //     templates,
-        // } = this.props;
+        const { user } = this.props;
+        if (!user) {
+            this.props.showRegistrationOverlay();
+        }
     };
 
     formats = [{
@@ -231,6 +241,8 @@ export default class OrdersCreate extends React.Component<Props, State> {
             example,
             exampleLoading,
             exampleError,
+            registrationOverlayShown,
+            loginOverlayShown,
         } = this.props;
         const {
             logo,
@@ -433,6 +445,22 @@ export default class OrdersCreate extends React.Component<Props, State> {
                     }
                     onClick={this.submitHandler}
                 />
+                { loginOverlayShown && (
+                    <Overlay onClick={this.props.hideLoginOverlays}>
+                        <Login
+                            overlayMode
+                            onGoToRegistration={this.props.showRegistrationOverlay}
+                        />
+                    </Overlay>
+                ) }
+                { registrationOverlayShown && (
+                    <Overlay onClick={this.props.hideLoginOverlays}>
+                        <Registration
+                            overlayMode
+                            onGoToLogin={this.props.showLoginOverlay}
+                        />
+                    </Overlay>
+                ) }
             </div>
         );
     }

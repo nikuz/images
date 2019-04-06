@@ -21,6 +21,9 @@ const {
     ORDER_EXAMPLE_REQUEST,
     ORDER_EXAMPLE_SUCCESS,
     ORDER_EXAMPLE_FAILURE,
+    ORDER_SHOW_REGISTRATION_OVERLAY,
+    ORDER_SHOW_LOGIN_OVERLAY,
+    ORDER_HIDE_LOGIN_OVERLAYS,
 } = orderConstants;
 
 export const getGenres = () => (dispatch: DispatchAPI<*>) => {
@@ -75,4 +78,16 @@ export const getExample = (data: Object) => (dispatch: DispatchAPI<*>) => {
         }),
     });
 };
+
+export const showRegistrationOverlay = () => ({
+    type: ORDER_SHOW_REGISTRATION_OVERLAY,
+});
+
+export const showLoginOverlay = () => ({
+    type: ORDER_SHOW_LOGIN_OVERLAY,
+});
+
+export const hideLoginOverlays = () => ({
+    type: ORDER_HIDE_LOGIN_OVERLAYS,
+});
 
